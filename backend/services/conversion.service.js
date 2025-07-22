@@ -12,13 +12,16 @@ if (!fs.existsSync(framesDir)) {
 const PUPPETEER_OPTIONS = {
   headless: "new",
   args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-accelerated-2d-canvas",
-    "--disable-gpu",
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-accelerated-2d-canvas',
+    '--disable-gpu'
   ],
-  executablePath: process.env.CHROME_BIN || null,
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || 
+                 (process.platform === 'win32' 
+                  ? process.env.CHROME_BIN 
+                  : puppeteer.executablePath())
 };
 
 // Fix file URL formatting for Windows
