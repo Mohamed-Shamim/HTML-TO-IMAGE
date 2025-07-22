@@ -9,20 +9,15 @@ if (!fs.existsSync(framesDir)) {
 }
 
 // Add Chrome flags for Windows compatibility
-const PUPPETEER_OPTIONS = {
-  headless: "new",
+const browser = await puppeteer.launch({
   args: [
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',
-    '--disable-accelerated-2d-canvas',
-    '--disable-gpu'
+    '--single-process'
   ],
-  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || 
-                 (process.platform === 'win32' 
-                  ? process.env.CHROME_BIN 
-                  : puppeteer.executablePath())
-};
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser'
+});
 
 // Fix file URL formatting for Windows
 const formatFilePath = (filePath) => {
