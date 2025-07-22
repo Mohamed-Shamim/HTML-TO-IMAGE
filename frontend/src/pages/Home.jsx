@@ -26,7 +26,7 @@ const Home = () => {
         );
       } // --- ADD THIS LOGIC ---
 
-      const backendBaseUrl = "http://localhost:5000"; // Or process.env.VITE_BACKEND_URL or similar
+      const backendBaseUrl = "https://html-to-image-1-ryld.onrender.com"; // Or process.env.VITE_BACKEND_URL or similar
       const fullDownloadUrl = `${backendBaseUrl}${data.downloadUrl}`;
 
       setResult({
