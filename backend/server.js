@@ -30,7 +30,7 @@ directories.forEach((dir) => {
 // =============================================
 app.use(
   cors({
-    origin: "http://localhost:5173" || "*",
+    origin: "https://html-to-image-shamim.onrender.com" || "*",
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   })
