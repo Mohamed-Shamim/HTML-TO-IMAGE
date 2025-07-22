@@ -1,10 +1,17 @@
-require("dotenv").config();
-const express = require("express");
-const fileUpload = require("express-fileupload");
-const cors = require("cors");
-const path = require("path");
-const fs = require("fs");
-const apiRouter = require("./routes/api");
+import express from "express";
+import fileUpload from "express-fileupload";
+import cors from "cors";
+import path from "path";
+import fs from "fs";
+import dotenv from "dotenv";
+import apiRouter from "./routes/api.js";
+import { fileURLToPath } from "url";
+
+// Recreate __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config();
 
 const app = express();
 
@@ -17,7 +24,6 @@ const directories = [
   path.join(__dirname, "frames"),
 ];
 
-// Create required directories if they don't exist
 directories.forEach((dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -38,7 +44,7 @@ app.use(
 
 app.use(
   fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max
+    limits: { fileSize: 50 * 1024 * 1024 },
     abortOnLimit: true,
     responseOnLimit: "File size exceeds the 50MB limit",
     useTempFiles: true,
@@ -86,8 +92,6 @@ app.get("/health", (req, res) => {
 // =============================================
 app.use((err, req, res, next) => {
   console.error(`[${new Date().toISOString()}] Error:`, err.stack);
-
-  // Clean up temporary files on error
   if (req.files) {
     Object.values(req.files).forEach((file) => {
       if (file.tempFilePath) {
@@ -95,7 +99,6 @@ app.use((err, req, res, next) => {
       }
     });
   }
-
   res.status(500).json({
     error: "Internal server error",
     message: process.env.NODE_ENV === "development" ? err.message : undefined,
@@ -122,7 +125,6 @@ const server = app.listen(PORT, () => {
   `);
 });
 
-// Graceful shutdown
 process.on("SIGTERM", () => {
   console.log("SIGTERM received. Shutting down gracefully...");
   server.close(() => {
